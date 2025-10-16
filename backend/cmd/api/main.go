@@ -58,8 +58,7 @@ func main() {
 	pollHandler := handler.NewPollHandler(pollService, logger)
 
 	// Setup router and http server
-	productionMode := cfg.Env == "prod"
-	router := handler.SetupRouter(pollHandler, logger, productionMode)
+	router := handler.SetupRouter(pollHandler, logger, cfg.Env == "prod")
 	server := &http.Server{
 		Addr:         cfg.Server.Address(),
 		Handler:      router,
