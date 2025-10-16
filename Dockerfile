@@ -8,10 +8,10 @@ COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
 # Copy code
-COPY . .
+COPY backend .
 
 # Build app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o poll-service ./backend/cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o poll-service ./cmd/api
 
 # Final stage
 FROM alpine:latest
