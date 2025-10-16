@@ -1,9 +1,0 @@
-mode: atomic
-github.com/AlexeyLars/surway-service/internal/config/config.go:37.30,40.47 2 0
-github.com/AlexeyLars/surway-service/internal/config/config.go:40.47,42.3 1 0
-github.com/AlexeyLars/surway-service/internal/config/config.go:44.2,44.18 1 0
-github.com/AlexeyLars/surway-service/internal/config/config.go:48.40,50.2 1 0
-github.com/AlexeyLars/surway-service/internal/config/config.go:53.39,55.2 1 0
-github.com/AlexeyLars/surway-service/internal/lib/random/random.go:9.39,17.19 4 0
-github.com/AlexeyLars/surway-service/internal/lib/random/random.go:17.19,19.3 1 0
-github.com/AlexeyLars/surway-service/internal/lib/random/random.go:21.2,21.18 1 0
