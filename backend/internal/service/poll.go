@@ -70,7 +70,7 @@ func (s *PollService) CreatePoll(ctx context.Context, req *model.CreatePollReque
 
 // Vote register chosen by user option
 func (s *PollService) Vote(ctx context.Context, pollID string, req *model.VoteRequest) error {
-	if err := s.storage.Vote(ctx, pollID, req.OptionIndex); err != nil {
+	if err := s.storage.Vote(ctx, pollID, req.OptionIndices); err != nil {
 		if err == storage.ErrPollNotFound {
 			s.logger.WarnContext(ctx, "vote for non-existent poll",
 				slog.String("poll_id", pollID),
@@ -80,21 +80,29 @@ func (s *PollService) Vote(ctx context.Context, pollID string, req *model.VoteRe
 		if err == storage.ErrInvalidOption {
 			s.logger.WarnContext(ctx, "invalid option index",
 				slog.String("poll_id", pollID),
-				slog.Int("option_index", req.OptionIndex),
+				slog.Any("option_indices", req.OptionIndices),
+			)
+			return err
+		}
+		if err == storage.ErrDuplicateOption {
+			s.logger.WarnContext(ctx, "duplicate option index",
+				slog.String("poll_id", pollID),
+				slog.Any("option_indices", req.OptionIndices),
 			)
 			return err
 		}
 
-		s.logger.ErrorContext(ctx, "failed to register vote",
+		s.logger.ErrorContext(ctx, "failed to register votes",
 			slog.String("poll_id", pollID),
 			slog.String("error", err.Error()),
 		)
-		return fmt.Errorf("failed to register vote: %w", err)
+		return fmt.Errorf("failed to register votes: %w", err)
 	}
 
-	s.logger.InfoContext(ctx, "vote registered",
+	s.logger.InfoContext(ctx, "votes registered",
 		slog.String("poll_id", pollID),
-		slog.Int("option_index", req.OptionIndex),
+		slog.Any("option_indices", req.OptionIndices),
+		slog.Int("votes_count", len(req.OptionIndices)),
 	)
 
 	return nil

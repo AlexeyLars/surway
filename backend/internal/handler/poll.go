@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"github.com/AlexeyLars/surway-service/internal/model"
 	"github.com/AlexeyLars/surway-service/internal/service"
 	"github.com/AlexeyLars/surway-service/internal/storage"
@@ -68,7 +69,7 @@ func (h *PollHandler) CreatePoll(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id path string true "Poll ID"
-// @Param        request body model.VoteRequest true "Option index"
+// @Param        request body model.VoteRequest true "Option indices"
 // @Success      200 {object} model.VoteResponse
 // @Failure      400 {object} model.ErrorResponse
 // @Failure      404 {object} model.ErrorResponse
@@ -106,6 +107,13 @@ func (h *PollHandler) Vote(c *gin.Context) {
 			})
 			return
 		}
+		if errors.Is(err, storage.ErrDuplicateOption) {
+			c.JSON(http.StatusBadRequest, model.ErrorResponse{
+				Error:   "duplicate_option",
+				Message: "Cannot vote for the same option multiple times",
+			})
+			return
+		}
 
 		c.JSON(http.StatusInternalServerError, model.ErrorResponse{
 			Error:   "internal_error",
@@ -116,7 +124,7 @@ func (h *PollHandler) Vote(c *gin.Context) {
 
 	c.JSON(http.StatusOK, model.VoteResponse{
 		Success: true,
-		Message: "Vote registered successfully",
+		Message: fmt.Sprintf("Votes registered successfully (%d options)", len(req.OptionIndices)),
 	})
 }
 
