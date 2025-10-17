@@ -160,7 +160,10 @@ func (s *RedisStorage) GetResults(ctx context.Context, pollID string) (*model.Po
 		field := fmt.Sprintf("%d", i)
 		count := 0
 		if countStr, ok := votesMap[field]; ok {
-			fmt.Sscanf(countStr, "%d", &count)
+			_, err := fmt.Sscanf(countStr, "%d", &count)
+			if err != nil {
+				return nil, fmt.Errorf("failed to convert votes into map: %w", err)
+			}
 		}
 		votes[option] = count
 		total += count
