@@ -24,7 +24,17 @@ func NewPollHandler(service *service.PollService, logger *slog.Logger) *PollHand
 	}
 }
 
-// CreatePoll processes POST /api/v1/polls
+// CreatePoll godoc
+// @Summary      Create poll
+// @Description  Create new poll with given name and options
+// @Tags         polls
+// @Accept       json
+// @Produce      json
+// @Param        request body model.CreatePollRequest true "Poll data"
+// @Success      201 {object} model.CreatePollResponse
+// @Failure      400 {object} model.ErrorResponse
+// @Failure      500 {object} model.ErrorResponse
+// @Router       /polls [post]
 func (h *PollHandler) CreatePoll(c *gin.Context) {
 	var req model.CreatePollRequest
 
@@ -51,7 +61,19 @@ func (h *PollHandler) CreatePoll(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
-// Vote processes POST /api/v1/polls/:id/vote
+// Vote godoc
+// @Summary      Vote
+// @Description  Register vote for given option
+// @Tags         polls
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Poll ID"
+// @Param        request body model.VoteRequest true "Option index"
+// @Success      200 {object} model.VoteResponse
+// @Failure      400 {object} model.ErrorResponse
+// @Failure      404 {object} model.ErrorResponse
+// @Failure      500 {object} model.ErrorResponse
+// @Router       /polls/{id}/vote [post]
 func (h *PollHandler) Vote(c *gin.Context) {
 	pollID := c.Param("id")
 
@@ -98,7 +120,16 @@ func (h *PollHandler) Vote(c *gin.Context) {
 	})
 }
 
-// GetResults processes GET /api/v1/polls/:id/results
+// GetResults godoc
+// @Summary      Get results
+// @Description  Return poll results with option's vote counts
+// @Tags         polls
+// @Produce      json
+// @Param        id path string true "Poll ID"
+// @Success      200 {object} model.PollResults
+// @Failure      404 {object} model.ErrorResponse
+// @Failure      500 {object} model.ErrorResponse
+// @Router       /polls/{id}/results [get]
 func (h *PollHandler) GetResults(c *gin.Context) {
 	pollID := c.Param("id")
 
@@ -122,7 +153,13 @@ func (h *PollHandler) GetResults(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-// HealthCheck processes GET /health
+// HealthCheck godoc
+// @Summary      Health check
+// @Description  Check service heath state
+// @Tags         health
+// @Produce      json
+// @Success      200 {object} map[string]string
+// @Router       /health [get]
 func (h *PollHandler) HealthCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

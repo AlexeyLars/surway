@@ -1,6 +1,8 @@
 package handler
 
 import (
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log/slog"
 	"time"
 
@@ -22,6 +24,7 @@ func SetupRouter(handler *PollHandler, logger *slog.Logger, releaseMode bool) *g
 
 	// Health check
 	router.GET("/health", handler.HealthCheck)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// API routes
 	v1 := router.Group("/api/v1")

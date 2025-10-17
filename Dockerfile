@@ -10,6 +10,11 @@ RUN go mod download
 # Copy code
 COPY backend .
 
+# Generate Swagger docs
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+RUN swag init -g cmd/api/main.go
+
 # Build app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o poll-service ./cmd/api
 

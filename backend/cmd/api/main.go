@@ -13,8 +13,22 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	_ "github.com/AlexeyLars/surway-service/docs"
 )
 
+// @title           Poll Service API
+// @version         1.0
+// @description     API service for creation and voting in pools
+// @termsOfService  http://swagger.io/terms/
+
+// @license.name  MIT
+// @license.url   https://opensource.org/licenses/MIT
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @schemes http https
 func main() {
 	// Configure logging
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
