@@ -24,7 +24,7 @@ type CreatePollResponse struct {
 }
 
 type VoteRequest struct {
-	OptionIndex []int `json:"option_index" binding:"required"`
+	OptionIndices []int `json:"option_indices" binding:"required,min=1,dive,min=0"`
 }
 
 type VoteResponse struct {

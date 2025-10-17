@@ -16,13 +16,16 @@ var (
 
 	// ErrInvalidOption returns when trying vote for non existed option
 	ErrInvalidOption = errors.New("invalid option index")
+
+	// ErrDuplicateOption returns when options indices not unique
+	ErrDuplicateOption = errors.New("options indices not unique")
 )
 
 // Storage defines interface for working with polls storage
 type Storage interface {
 	CreatePoll(ctx context.Context, poll *model.Poll, ttl time.Duration) error
 	GetPoll(ctx context.Context, pollID string) (*model.Poll, error)
-	Vote(ctx context.Context, pollID string, optionIndex int) error
+	Vote(ctx context.Context, pollID string, optionIndices []int) error
 	GetResults(ctx context.Context, pollID string) (*model.PollResults, error)
 	Close() error
 }
@@ -93,7 +96,7 @@ func (s *RedisStorage) GetPoll(ctx context.Context, pollID string) (*model.Poll,
 	return &poll, nil
 }
 
-func (s *RedisStorage) Vote(ctx context.Context, pollID string, optionIndex int) error {
+func (s *RedisStorage) Vote(ctx context.Context, pollID string, optionIndices []int) error {
 	// Check if poll exists
 	exists, err := s.client.Exists(ctx, pollInfoKey(pollID)).Result()
 	if err != nil {
@@ -103,20 +106,36 @@ func (s *RedisStorage) Vote(ctx context.Context, pollID string, optionIndex int)
 		return ErrPollNotFound
 	}
 
-	// Get poll and validate index
+	// Get poll, validate indices and check for duplicates
 	poll, err := s.GetPoll(ctx, pollID)
 	if err != nil {
 		return err
 	}
 
-	if optionIndex < 0 || optionIndex >= len(poll.Options) {
-		return ErrInvalidOption
+	for _, idx := range optionIndices {
+		if idx < 0 || idx >= len(poll.Options) {
+			return ErrInvalidOption
+		}
 	}
 
-	// Atomic counter increase
-	field := fmt.Sprintf("%d", optionIndex)
-	if err := s.client.HIncrBy(ctx, pollVotesKey(pollID), field, 1).Err(); err != nil {
-		return fmt.Errorf("failed to increment vote: %w", err)
+	seen := make(map[int]bool)
+	for _, idx := range optionIndices {
+		if seen[idx] {
+			return ErrDuplicateOption
+		}
+		seen[idx] = true
+	}
+
+	// Atomic counters increase
+	pipe := s.client.Pipeline()
+	for _, idx := range optionIndices {
+		field := fmt.Sprintf("%d", idx)
+		pipe.HIncrBy(ctx, pollVotesKey(pollID), field, 1)
+	}
+
+	_, err = pipe.Exec(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to register votes: %w", err)
 	}
 
 	return nil
@@ -141,7 +160,10 @@ func (s *RedisStorage) GetResults(ctx context.Context, pollID string) (*model.Po
 		field := fmt.Sprintf("%d", i)
 		count := 0
 		if countStr, ok := votesMap[field]; ok {
-			fmt.Sscanf(countStr, "%d", &count)
+			_, err := fmt.Sscanf(countStr, "%d", &count)
+			if err != nil {
+				return nil, fmt.Errorf("failed to convert votes into map: %w", err)
+			}
 		}
 		votes[option] = count
 		total += count

@@ -10,6 +10,7 @@ type Config struct {
 	Server ServerConfig
 	Redis  RedisConfig
 	Poll   PollConfig
+	Env    string `env:"ENV" env-default:"dev"`
 }
 
 type ServerConfig struct {
