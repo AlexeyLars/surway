@@ -2,6 +2,8 @@
 
 import ProgressRing from "./ProgressRing";
 import Card from "./Card";
+import ResponseChart from "./ResponseChart";
+
 
 interface AnalyticsCardProps {
     responses: number,
@@ -19,9 +21,11 @@ export default function AnalyticsCard({ time, responses, percentage }: Analytics
             
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Card title="Average completion time" value={time.toString() + "s"}/>
-                <Card title="Total responses" value={responses.toString()} />
+                <Card title="Среднее время прохождения" value={time.toString() + "s"}/>
+                <Card title="Всего опросов" value={responses.toString()} />
             </div>
+
+            <ResponseChart />
         </div>
     )
 }
