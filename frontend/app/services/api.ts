@@ -1,37 +1,41 @@
-const API_BASE_URL = 'http://localhost:8080/api/v1';// dev
+const API_BASE_URL = 'http://localhost:8080/api/v1'; //dev
 
 export const createPoll = async (title: string, options: string[]) => {
   const response = await fetch(`${API_BASE_URL}/polls`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title, options }),
   });
+  
   if (!response.ok) {
-    throw new Error('Failed to create poll');
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(JSON.stringify(errorData));
   }
+  
   return response.json();
 };
 
 export const getPoll = async (id: string) => {
   const response = await fetch(`${API_BASE_URL}/polls/${id}/results`);
-   if (!response.ok) {
+  
+  if (!response.ok) {
     throw new Error('Poll not found');
   }
+  
   return response.json();
 };
 
-export const voteOnPoll = async (id: string, optionIndex: number) => {
+export const voteOnPoll = async (id: string, optionIndices: number[]) => {
   const response = await fetch(`${API_BASE_URL}/polls/${id}/vote`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ option_indices: [optionIndex] }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ option_indices: optionIndices }),
   });
+  
   if (!response.ok) {
-    throw new Error('Failed to vote');
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(JSON.stringify(errorData));
   }
+  
   return response.json();
 };

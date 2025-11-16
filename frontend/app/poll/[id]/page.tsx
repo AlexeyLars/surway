@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getPoll, voteOnPoll } from '@/app/services/api'; 
+import { getPoll, voteOnPoll } from '@/app/services/api';
 import { Loader2 } from 'lucide-react';
-
 
 interface Poll {
   id: string;
@@ -22,14 +21,13 @@ export default function PollVotePage() {
   const pollId = params.id as string;
 
   const [pollData, setPollData] = useState<PollData | null>(null);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isVoting, setIsVoting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!pollId) return;
-
     const fetchPoll = async () => {
       try {
         const data = await getPoll(pollId);
@@ -40,14 +38,21 @@ export default function PollVotePage() {
         setIsLoading(false);
       }
     };
-
     fetchPoll();
   }, [pollId]);
 
+  const handleOptionToggle = (index: number) => {
+    setSelectedOptions((prev) =>
+      prev.includes(index)
+        ? prev.filter((item) => item !== index)
+        : [...prev, index]
+    );
+  };
+
   const handleVote = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedOption === null) {
-      setError('Пожалуйста, выберите один из вариантов.');
+    if (selectedOptions.length === 0) {
+      setError('Пожалуйста, выберите хотя бы один вариант.');
       return;
     }
 
@@ -55,7 +60,7 @@ export default function PollVotePage() {
     setError(null);
 
     try {
-      await voteOnPoll(pollId, selectedOption);
+      await voteOnPoll(pollId, selectedOptions);
       router.push(`/poll/${pollId}/results`);
     } catch (err) {
       setError('Не удалось проголосовать. Пожалуйста, попробуйте снова.');
@@ -71,7 +76,6 @@ export default function PollVotePage() {
     );
   }
 
-
   if (error && !pollData) {
     return (
       <main className="min-h-screen bg-[#F4F7FB] flex items-center justify-center text-center px-4">
@@ -82,7 +86,7 @@ export default function PollVotePage() {
       </main>
     );
   }
-  
+
   if (!pollData) {
     return null;
   }
@@ -93,40 +97,36 @@ export default function PollVotePage() {
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
           <form onSubmit={handleVote}>
             <div className="mb-8">
-              <p className="text-sm font-semibold text-gray-500">Голосование</p>
+              <p className="text-sm font-semibold text-gray-500">Голосование (можно выбрать несколько)</p>
               <h1 className="text-2xl md:text-3xl font-bold text-[#0B2B4A] mt-1">
                 {pollData.poll.title}
               </h1>
             </div>
-
             <div className="space-y-4">
               {pollData.poll.options.map((option, index) => (
                 <label
                   key={index}
                   className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedOption === index
+                    selectedOptions.includes(index)
                       ? 'border-[#00B39F] bg-teal-50 ring-2 ring-[#00B39F]'
                       : 'border-gray-300 bg-white hover:bg-gray-50'
                   }`}
                 >
                   <input
-                    type="radio"
-                    name="poll-option"
-                    checked={selectedOption === index}
-                    onChange={() => setSelectedOption(index)}
-                    className="h-5 w-5 text-[#00B39F] focus:ring-[#00B39F] border-gray-300"
+                    type="checkbox"
+                    checked={selectedOptions.includes(index)}
+                    onChange={() => handleOptionToggle(index)}
+                    className="h-5 w-5 text-[#00B39F] focus:ring-[#00B39F] border-gray-300 rounded"
                   />
                   <span className="ml-4 text-lg text-gray-800 font-medium">{option}</span>
                 </label>
               ))}
             </div>
-
             {error && <p className="mt-6 text-center text-red-500">{error}</p>}
-
             <div className="mt-10">
               <button
                 type="submit"
-                disabled={isVoting || selectedOption === null}
+                disabled={isVoting || selectedOptions.length === 0}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-[#00B39F] text-white text-lg font-bold rounded-lg shadow-lg shadow-[#00B39F]/30 hover:shadow-xl hover:bg-[#00B39F]/90 transition-all tracking-wide disabled:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed"
               >
                 {isVoting ? (

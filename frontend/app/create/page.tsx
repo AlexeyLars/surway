@@ -27,45 +27,29 @@ export default function CreatePollPage() {
     if (options.length <= 2) return;
     setOptions(options.filter((_, i) => i !== index));
   };
-  
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError(null);
+    const filteredOptions = options.map(opt => opt.trim()).filter(Boolean);
+    const trimmedTitle = title.trim();
 
-  const filteredOptions = options.map(opt => opt.trim()).filter(Boolean);
-  const trimmedTitle = title.trim();
-
-  if (trimmedTitle.length < 3 || filteredOptions.length < 2) {
-    let errorMsg = '';
-    if (trimmedTitle.length < 3) {
-      errorMsg = 'Вопрос должен быть длиннее 2 символов. ';
+    if (trimmedTitle.length < 5 || filteredOptions.length < 2) {
+      setError('Вопрос должен быть длиннее 4 символов и иметь минимум два варианта ответа.');
+      return;
     }
-    if (filteredOptions.length < 2) {
-      errorMsg += 'Требуется минимум два варианта ответа.';
-    }
-    setError(errorMsg.trim());
-    return;
-  }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  try {
-    const data = await createPoll(trimmedTitle, filteredOptions);
-    router.push(`/poll/${data.poll_id}/success`);
-  } catch (err) {
-    let errorMessage = 'Произошла ошибка при создании опроса. Попробуйте снова.';
-    if (err instanceof Error) {
-        try {
-            const errorResponse = JSON.parse(err.message);
-            if (errorResponse.message) errorMessage = errorResponse.message;
-        } catch {}
+    try {
+      const data = await createPoll(trimmedTitle, filteredOptions);
+      router.push(`/poll/${data.poll_id}/success`);
+    } catch (err) {
+      setError('Произошла ошибка при создании опроса. Попробуйте снова.');
+      setIsLoading(false);
     }
-    setError(errorMessage);
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] py-12 md:py-20">
@@ -75,9 +59,8 @@ const handleSubmit = async (e: React.FormEvent) => {
             <h1 className="text-3xl md:text-4xl font-bold text-[#0B2B4A]">
               Создание опроса
             </h1>
-            <p className="text-gray-500 mt-2">Задайте вопрос и укажите варианты ответов</p>
+            <p className="text-gray-500 mt-2">Все опросы поддерживают множественный выбор</p>
           </div>
-
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div>
@@ -89,12 +72,11 @@ const handleSubmit = async (e: React.FormEvent) => {
                   id="poll-title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Например: Какой фреймворк лучше?"
+                  placeholder="Например: Какие технологии вы используете?"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B39F] transition-shadow"
                   required
                 />
               </div>
-
               <div>
                 <label className="block text-lg font-bold text-gray-700 mb-2">
                   Варианты ответа
@@ -123,7 +105,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                     </div>
                   ))}
                 </div>
-
                 <button
                   type="button"
                   onClick={addOption}
@@ -134,9 +115,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </button>
               </div>
             </div>
-
             {error && <p className="mt-6 text-center text-red-500">{error}</p>}
-
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <button
                 type="submit"
