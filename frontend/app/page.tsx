@@ -1,12 +1,15 @@
 import AnalyticsCard from "../components/analytics/AnalyticsCard";
 import TypewriterText from "../components/ui/TypeWriter";
+import Link from 'next/link';
 
 export default function Home() {
+
   const strings = [
     "Опрос за 30 секунд.",
     "Мнения без регистрации.",
     "Надёжная аналитика в реальном времени.",
   ];
+
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] py-12">
@@ -22,18 +25,15 @@ export default function Home() {
                   <TypewriterText strings={strings} />
                 </div>
               </div>
-
+              <Link href="/create">
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="px-6 py-3 bg-[#00B39F] text-white font-bold rounded-lg shadow-lg shadow-[#00B39F]/30 hover:shadow-xl hover:shadow-[#00B39F]/40 hover:bg-[#00B39F]/90 transition-all tracking-wide">
+                <button className="px-16 py-7 bg-[#00B39F] text-white text-2xl font-bold rounded-lg shadow-lg shadow-[#00B39F]/30 hover:shadow-xl hover:shadow-[#00B39F]/40 hover:bg-[#00B39F]/90 transition-all tracking-wide">
                   Создать опрос
                 </button>
-                <button className="px-6 py-3 bg-white text-[#0B2B4A] font-bold rounded-lg hover:bg-gray-50 transition-all tracking-wide">
-                  Посмотреть шаблоны
-                </button>
               </div>
+              </Link>
             </div>
-
-            <div className="lg:w-1/2 flex justify-center">
+            <div className="lg:w-1/2 flex justify-center lg:justify-end">
               <AnalyticsCard responses={1244} time={58} percentage={84} />
             </div>
           </div>

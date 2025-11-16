@@ -1,3 +1,5 @@
+// frontend/tsconfig.json
+
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -18,9 +20,12 @@
         "name": "next"
       }
     ],
+    // --- НАЧАЛО ИЗМЕНЕНИЙ ---
+    "baseUrl": ".", // <-- ДОБАВЬТЕ ЭТУ СТРОКУ
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"] // <-- ИЗМЕНИТЕ ЭТУ СТРОКУ (уберите 'src')
     }
+    // --- КОНЕЦ ИЗМЕНЕНИЙ ---
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
