@@ -45,7 +45,7 @@ export default async function PollSuccessPage({ params }: { params: { id: string
               Опрос успешно создан!
             </h1>
             <p className="text-gray-500 mt-2 text-lg">
-              «{pollData.title}»
+                «{pollData.poll.title}»
             </p>
           </div>
 
