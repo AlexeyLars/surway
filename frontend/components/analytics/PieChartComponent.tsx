@@ -6,37 +6,47 @@ interface PieDataItem {
   name: string;
   value: number;
   percentage: number;
+  // Индексная сигнатура для Recharts
+  [key: string]: string | number;
 }
 
 interface PieChartComponentProps {
   data: PieDataItem[];
 }
 
-// Типизация для пропсов кастомного лейбла Recharts
+// Разрешаем number | string, чтобы удовлетворить кривые типы Recharts
 interface CustomizedLabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
+  cx?: number | string;
+  cy?: number | string;
+  midAngle?: number | string;
+  innerRadius?: number | string;
+  outerRadius?: number | string;
+  percent?: number;
 }
 
 const COLORS = [
-  '#00B39F', // Основной
-  '#3b82f6', // Синий
-  '#84cc16', // Лаймовый
-  '#f59e0b', // Мягкий янтарный
-  '#6366f1', // Индиго
-  '#6b7280', // Серый
-  '#8b5cf6', // Сдержанный фиолетовый
-  '#0ea5e9', // Небесно-голубой
+  '#00B39F',
+  '#3b82f6',
+  '#84cc16',
+  '#f59e0b',
+  '#6366f1',
+  '#6b7280',
+  '#8b5cf6',
+  '#0ea5e9',
 ];
 
 const RADIAN = Math.PI / 180;
 
-// Убрали any, добавили типизацию пропсов
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: CustomizedLabelProps) => {
+const renderCustomizedLabel = (props: CustomizedLabelProps) => {
+  // Безопасное извлечение и преобразование в числа
+  // Recharts иногда определяет типы как string, хотя шлет числа, поэтому используем Number()
+  const cx = Number(props.cx) || 0;
+  const cy = Number(props.cy) || 0;
+  const midAngle = Number(props.midAngle) || 0;
+  const innerRadius = Number(props.innerRadius) || 0;
+  const outerRadius = Number(props.outerRadius) || 0;
+  const percent = Number(props.percent) || 0;
+
   const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -64,7 +74,7 @@ export default function PieChartComponent({ data }: PieChartComponentProps) {
     <ResponsiveContainer width="100%" height={350}>
       <PieChart>
         <Pie
-          data={data} // Убрали "as any", Recharts должен принять типизированный массив
+          data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
