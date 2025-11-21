@@ -1,34 +1,52 @@
-// app/components/analytics/PieChartComponent.tsx
 'use client';
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
-interface PieDataItem {
+
+export interface PieDataItem {
   name: string;
   value: number;
   percentage: number;
+  [key: string]: string | number;
 }
+
 
 interface PieChartComponentProps {
   data: PieDataItem[];
 }
 
-// --- ИЗМЕНЕНИЕ 1: НОВАЯ, ПРИГЛУШЕННАЯ ПАЛИТРА ---
+interface CustomizedLabelProps {
+  cx?: number | string;
+  cy?: number | string;
+  midAngle?: number | string;
+  innerRadius?: number | string;
+  outerRadius?: number | string;
+  percent?: number;
+}
+
 const COLORS = [
-  '#00B39F', // Основной
-  '#3b82f6', // Синий
-  '#84cc16', // Лаймовый
-  '#f59e0b', // Мягкий янтарный (вместо резкого оранжевого)
-  '#6366f1', // Индиго
-  '#6b7280', // Серый
-  '#8b5cf6', // Сдержанный фиолетовый (вместо яркого)
-  '#0ea5e9', // Небесно-голубой
+  '#00B39F',
+  '#3b82f6',
+  '#84cc16',
+  '#f59e0b',
+  '#6366f1',
+  '#6b7280',
+  '#8b5cf6',
+  '#0ea5e9',
 ];
 
 const RADIAN = Math.PI / 180;
-// Recharts передает сюда пропсы с типом 'any', поэтому здесь это оправдано
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
-  // --- ИЗМЕНЕНИЕ 2: Смещаем лейбл дальше от центра (было 0.5) ---
+
+const renderCustomizedLabel = (props: CustomizedLabelProps) => {
+  // Безопасное извлечение и преобразование в числа
+  // Recharts иногда определяет типы как string, хотя шлет числа, поэтому используем Number()
+  const cx = Number(props.cx) || 0;
+  const cy = Number(props.cy) || 0;
+  const midAngle = Number(props.midAngle) || 0;
+  const innerRadius = Number(props.innerRadius) || 0;
+  const outerRadius = Number(props.outerRadius) || 0;
+  const percent = Number(props.percent) || 0;
+
   const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -44,7 +62,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       fill="white" 
       textAnchor="middle" 
       dominantBaseline="central" 
-      // --- ИЗМЕНЕНИЕ 3: Добавляем класс для уменьшения шрифта ---
       className="font-semibold text-sm"
     >
       {`${(percent * 100).toFixed(0)}%`}
@@ -57,7 +74,7 @@ export default function PieChartComponent({ data }: PieChartComponentProps) {
     <ResponsiveContainer width="100%" height={350}>
       <PieChart>
         <Pie
-          data={data as any}
+          data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
@@ -89,4 +106,4 @@ export default function PieChartComponent({ data }: PieChartComponentProps) {
       </PieChart>
     </ResponsiveContainer>
   );
-}
+}//
