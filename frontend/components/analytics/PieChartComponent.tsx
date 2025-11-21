@@ -106,4 +106,4 @@ export default function PieChartComponent({ data }: PieChartComponentProps) {
       </PieChart>
     </ResponsiveContainer>
   );
-}
+}//
