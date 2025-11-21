@@ -2,19 +2,19 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
-interface PieDataItem {
+
+export interface PieDataItem {
   name: string;
   value: number;
   percentage: number;
-  // Индексная сигнатура для Recharts
   [key: string]: string | number;
 }
+
 
 interface PieChartComponentProps {
   data: PieDataItem[];
 }
 
-// Разрешаем number | string, чтобы удовлетворить кривые типы Recharts
 interface CustomizedLabelProps {
   cx?: number | string;
   cy?: number | string;

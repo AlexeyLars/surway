@@ -1,17 +1,11 @@
 import { getPoll } from '@/app/services/api';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import PieChartComponent from '@/components/analytics/PieChartComponent';
+import PieChartComponent, { PieDataItem } from '@/components/analytics/PieChartComponent';
 
 interface Result {
   text: string;
   votes: number;
-  percentage: number;
-}
-
-interface PieDataItem {
-  name: string;
-  value: number;
   percentage: number;
 }
 
@@ -36,7 +30,7 @@ export default async function PollResultsPage({ params }: { params: Promise<{ id
   let pollData;
   try {
     pollData = await getPoll(id);
-  } catch (error) {
+  } catch {
     notFound();
   }
 
@@ -48,7 +42,6 @@ export default async function PollResultsPage({ params }: { params: Promise<{ id
     return { text: optionText, votes: voteCount, percentage };
   });
 
-
   const pieData: PieDataItem[] = results.map((result) => ({
     name: result.text,
     value: result.votes,
@@ -58,7 +51,6 @@ export default async function PollResultsPage({ params }: { params: Promise<{ id
   const topOption = results.reduce((max, current) => 
     current.votes > max.votes ? current : max
   , results[0] || { text: '-', votes: 0, percentage: 0 });
-
 
   const avgPercentage = results.length > 0 ? (100 / results.length).toFixed(1) : '0';
 
@@ -89,7 +81,6 @@ export default async function PollResultsPage({ params }: { params: Promise<{ id
               </div>
             </div>
 
-   
             {total > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
                 <h2 className="text-2xl font-bold text-[#0B2B4A] mb-6">Визуализация</h2>
@@ -123,7 +114,6 @@ export default async function PollResultsPage({ params }: { params: Promise<{ id
                 </div>
               </div>
             </div>
-
 
             <div className="bg-white rounded-xl shadow-lg p-6">
               <p className="text-sm font-semibold text-gray-500 mb-1">Создан</p>
