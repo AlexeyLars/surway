@@ -1,0 +1,36 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "develop" ]
+    paths:
+      - 'backend/**'
+      - 'Makefile' 
+  pull_request:
+    branches: [ "develop" ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  test-and-build:
+    name: Test and Build Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      # используем команды из makefile'а
+      - name: Install dependencies
+        run: make deps
+
+      - name: Run Tests
+        run: make test
+   
+      - name: Build Check
+        run: make build
