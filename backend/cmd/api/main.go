@@ -2,11 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/AlexeyLars/surway-service/internal/config"
-	"github.com/AlexeyLars/surway-service/internal/handler"
-	"github.com/AlexeyLars/surway-service/internal/service"
-	"github.com/AlexeyLars/surway-service/internal/storage"
-	"github.com/redis/go-redis/v9"
 	"log/slog"
 	"net/http"
 	"os"
@@ -14,12 +9,18 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/AlexeyLars/surway-service/internal/config"
+	"github.com/AlexeyLars/surway-service/internal/handler"
+	"github.com/AlexeyLars/surway-service/internal/service"
+	"github.com/AlexeyLars/surway-service/internal/storage"
+	"github.com/redis/go-redis/v9"
+
 	_ "github.com/AlexeyLars/surway-service/docs"
 )
 
 // @title           Poll Service API
 // @version         1.0
-// @description     API service for creation and voting in pools
+// @description     API service for creation and voting in pools ...
 // @termsOfService  http://swagger.io/terms/
 
 // @license.name  MIT
