@@ -1,0 +1,200 @@
+basePath: /api/v1
+definitions:
+  model.CreatePollRequest:
+    properties:
+      options:
+        items:
+          type: string
+        maxItems: 10
+        minItems: 2
+        type: array
+      title:
+        maxLength: 200
+        minLength: 3
+        type: string
+    required:
+    - options
+    - title
+    type: object
+  model.CreatePollResponse:
+    properties:
+      poll_id:
+        type: string
+      results_url:
+        type: string
+      vote_url:
+        type: string
+    type: object
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+  model.Poll:
+    properties:
+      created_at:
+        type: string
+      expires_at:
+        type: string
+      id:
+        type: string
+      options:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+  model.PollResults:
+    properties:
+      poll:
+        $ref: '#/definitions/model.Poll'
+      total:
+        type: integer
+      votes:
+        additionalProperties:
+          type: integer
+        description: option -> count
+        type: object
+    type: object
+  model.VoteRequest:
+    properties:
+      option_index:
+        minimum: 0
+        type: integer
+    type: object
+  model.VoteResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API service for creation and voting in pools
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Poll Service API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Check service heath state
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health check
+      tags:
+      - health
+  /polls:
+    post:
+      consumes:
+      - application/json
+      description: Create new poll with given name and options
+      parameters:
+      - description: Poll data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreatePollRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.CreatePollResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Create poll
+      tags:
+      - polls
+  /polls/{id}/results:
+    get:
+      description: Return poll results with option's vote counts
+      parameters:
+      - description: Poll ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PollResults'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get results
+      tags:
+      - polls
+  /polls/{id}/vote:
+    post:
+      consumes:
+      - application/json
+      description: Register vote for given option
+      parameters:
+      - description: Poll ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Option index
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.VoteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.VoteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Vote
+      tags:
+      - polls
+schemes:
+- http
+- https
+swagger: "2.0"
