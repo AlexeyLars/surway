@@ -30,8 +30,8 @@ export default async function PollSuccessPage({ params }: { params: { id: string
   }
 
   const baseUrl = getBaseUrl();
-  const voteUrl = `${baseUrl}/poll/${pollId}`;
-  const resultsUrl = `${baseUrl}/poll/${pollId}/results`;
+  const voteUrl = `${baseUrl}/${pollId}`;
+  const resultsUrl = `${baseUrl}/${pollId}/results`;
 
   return (
     <main className="min-h-screen bg-[#F4F7FB] py-12 md:py-20">

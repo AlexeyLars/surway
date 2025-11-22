@@ -44,7 +44,7 @@ export default function CreatePollPage() {
 
     try {
       const data = await createPoll(trimmedTitle, filteredOptions);
-      router.push(`/poll/${data.poll_id}/success`);
+      router.push(`/${data.poll_id}/success`);
     } catch (err) {
       setError('Произошла ошибка при создании опроса. Попробуйте снова.');
       setIsLoading(false);
