@@ -61,7 +61,7 @@ export default function PollVotePage() {
 
     try {
       await voteOnPoll(pollId, selectedOptions);
-      router.push(`/poll/${pollId}/results`);
+      router.push(`/${pollId}/results`);
     } catch (err) {
       setError('Не удалось проголосовать. Пожалуйста, попробуйте снова.');
       setIsVoting(false);
