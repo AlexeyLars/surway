@@ -34,7 +34,7 @@ type VoteResponse struct {
 
 type PollResults struct {
 	Poll  Poll           `json:"poll"`
-	Votes map[string]int `json:"votes"` // option ->  count
+	Votes map[string]int `json:"votes"` // option ->  count ...
 	Total int            `json:"total"`
 }
 
