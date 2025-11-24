@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: make deps
 
+      - name: Run Lint
+        run: make lint
+
       - name: Run Tests
         run: make test
    
