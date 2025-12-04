@@ -2,15 +2,10 @@ import Link from 'next/link';
 import { ArrowRight, BarChart2, MessageSquare, Check } from 'lucide-react';
 import { getPoll } from '@/app/services/api';
 import CopyLinkButton from '@/components/ui/CopyLinkButton';
+import { config } from '@/app/config';
 
-
-function getBaseUrl() {
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:3000`; 
-}
-
-export default async function PollSuccessPage({ params }: { params: { id: string } }) {
-  const pollId = params.id;
+export default async function PollSuccessPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: pollId } = await params;
 
   let pollData;
   try {
@@ -29,7 +24,7 @@ export default async function PollSuccessPage({ params }: { params: { id: string
     );
   }
 
-  const baseUrl = getBaseUrl();
+  const baseUrl = config.frontendBaseUrl;
   const voteUrl = `${baseUrl}/${pollId}`;
   const resultsUrl = `${baseUrl}/${pollId}/results`;
 

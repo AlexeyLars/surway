@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:8080/api/v1'; //dev
+import { config } from '../config';
+
+const API_BASE_URL = config.apiBaseUrl;
 
 export const createPoll = async (title: string, options: string[]) => {
   const response = await fetch(`${API_BASE_URL}/polls`, {
