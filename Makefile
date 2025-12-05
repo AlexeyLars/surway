@@ -16,16 +16,22 @@ test-coverage: test ## Show tests coverage
 	cd backend && go tool cover -html=coverage.out
 
 docker-up: ## Run Docker Compose
-	docker-compose up -d
+	docker compose up -d
 
 docker-down: ## Stop Docker Compose
-	docker-compose down
+	docker compose down
 
 docker-logs: ## Show Docker Compose logs
-	docker-compose logs -f
+	docker compose logs -f
 
 docker-build: ## Build Docker image
-	docker build -t poll-service:latest .
+	docker compose build
+
+docker-build-backend: ## Build backend image only
+	docker build -t poll-service:latest ./backend
+
+docker-build-frontend: ## Build frontend image only
+	docker build -t survey-frontend:latest ./frontend
 
 clean: ## Clean build artefacts
 	cd backend && rm -f poll-service coverage.out
