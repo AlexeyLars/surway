@@ -1,4 +1,4 @@
-your-domain.com {
+sur-way.ru {
     log
     # Все запросы на /api/* отправляем на бекенд
     handle /api/* {
