@@ -1,0 +1,89 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: poll-redis
+    volumes:
+      - redis-data:/data
+      - ./configs/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - app-net
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # В проде порты наружу НЕ выставляем, доступ только через Caddy
+    expose:
+      - "8080"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8080
+      - BASE_URL=https://your-domain.com/api
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - REDIS_DB=0
+      - POLL_DEFAULT_TTL=168h
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - app-net
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_PROTOCOL=https
+        - NEXT_PUBLIC_API_HOST=your-domain.com
+        - NEXT_PUBLIC_API_PORT=443 
+        - NEXT_PUBLIC_API_VERSION=v1
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - API_INTERNAL_PROTOCOL=http
+      - API_INTERNAL_HOST=backend
+      - API_INTERNAL_PORT=8080
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - app-net
+    restart: always
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy-ingress
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data # Здесь хранятся SSL сертификаты
+      - caddy_config:/config
+    networks:
+      - app-net
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  redis-data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app-net:
+    driver: bridge
