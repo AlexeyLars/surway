@@ -38,4 +38,4 @@ EXPOSE 3000
 
 # Если standalone: CMD ["node", "server.js"]
 # Если стандартный:
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]
