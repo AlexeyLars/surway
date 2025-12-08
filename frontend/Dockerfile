@@ -21,6 +21,10 @@ ARG NEXT_PUBLIC_API_VERSION
 # Эти переменные теперь будут доступны команде npm run build
 RUN npm run build
 
+ARG NEXT_PUBLIC_FRONTEND_PROTOCOL
+ARG NEXT_PUBLIC_FRONTEND_HOST
+ARG NEXT_PUBLIC_FRONTEND_PORT
+
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
