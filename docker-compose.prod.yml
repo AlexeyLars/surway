@@ -44,7 +44,7 @@ services:
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_PROTOCOL=https
-        - NEXT_PUBLIC_API_HOST=your-domain.com
+        - NEXT_PUBLIC_API_HOST=sur-way.ru
         - NEXT_PUBLIC_API_PORT=443 
         - NEXT_PUBLIC_API_VERSION=v1
     expose:
