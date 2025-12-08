@@ -47,9 +47,10 @@ services:
         - NEXT_PUBLIC_API_HOST=sur-way.ru
         - NEXT_PUBLIC_API_PORT=443 
         - NEXT_PUBLIC_API_VERSION=v1
-
+        
         - NEXT_PUBLIC_FRONTEND_PROTOCOL=https
         - NEXT_PUBLIC_FRONTEND_HOST=sur-way.ru
+        - NEXT_PUBLIC_FRONTEND_PORT=443
     expose:
       - "3000"
     environment:
