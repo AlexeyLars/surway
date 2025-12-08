@@ -1,0 +1,12 @@
+sur-way.ru {
+    log
+    # Все запросы на /api/* отправляем на бекенд
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+
+    # Все остальные запросы отправляем на фронтенд
+    handle /* {
+        reverse_proxy frontend:3000
+    }
+}

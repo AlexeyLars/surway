@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Poll Creation Web App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<style>
+        .typewriter-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid #00B39F;
+            animation: typing 3.5s steps(40, end) infinite, blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00B39F; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00B39F",
+                        "background-light": "#F4F7FB",
+                        "background-dark": "#0B2B4A",
+                        "navy": "#0B2B4A",
+                        "mint": "#00B39F",
+                        "cool-gray": "#F4F7FB",
+                        "white": "#FFFFFF"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-navy dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center items-center py-5">
+<div class="layout-content-container flex flex-col lg:flex-row max-w-[1280px] w-full flex-1 gap-12 lg:gap-16">
+<div class="flex flex-col gap-8 lg:w-1/2 justify-center py-10">
+<div class="flex flex-col gap-4 text-left">
+<h1 class="text-navy dark:text-white text-5xl md:text-6xl font-bold leading-tight tracking-tighter">
+                                Polls that actually answer.
+                            </h1>
+<div class="h-14">
+<h2 class="text-navy/80 dark:text-white/80 text-xl md:text-2xl font-normal leading-normal">
+<span class="typewriter-text">Create a poll in 30 seconds.</span>
+</h2>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mint text-white text-base font-bold leading-normal tracking-wide shadow-lg shadow-mint/30 hover:shadow-xl hover:bg-mint/90 transition-all duration-300">
+<span class="truncate">Create poll</span>
+</button>
+<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-cool-gray/50 dark:bg-white/10 text-navy dark:text-white text-base font-bold leading-normal tracking-wide hover:bg-cool-gray dark:hover:bg-white/20 transition-all duration-300">
+<span class="truncate">Browse templates</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col lg:w-1/2 justify-center items-center">
+<div class="bg-white dark:bg-navy/50 rounded-xl p-8 shadow-2xl shadow-cool-gray-500/20 dark:shadow-black/20 w-full max-w-md">
+<div class="flex flex-col gap-6">
+<div class="relative w-full h-64 flex items-center justify-center">
+<svg class="absolute w-full h-full" viewbox="0 0 100 100">
+<circle class="text-cool-gray dark:text-white/10" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-mint animate-progress" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-linecap="round" stroke-width="8" style="stroke-dasharray: 283; stroke-dashoffset: 70.75; transform: rotate(-90deg); transform-origin: 50% 50%;"></circle>
+</svg>
+<div class="text-center">
+<p class="text-navy dark:text-white text-5xl font-bold">75%</p>
+<p class="text-navy/70 dark:text-white/70 text-lg">Completed</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-2 rounded-lg p-4 bg-cool-gray/50 dark:bg-white/10">
+<p class="text-navy/80 dark:text-white/80 text-base font-medium leading-normal">Average completion time</p>
+<p class="text-navy dark:text-white tracking-light text-2xl font-bold leading-tight">42s</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 bg-cool-gray/50 dark:bg-white/10">
+<p class="text-navy/80 dark:text-white/80 text-base font-medium leading-normal">Total responses</p>
+<p class="text-navy dark:text-white tracking-light text-2xl font-bold leading-tight">1,234</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<p class="text-navy/80 dark:text-white/80 text-base font-medium leading-normal">Response Trend</p>
+<div class="flex h-24 flex-1 flex-col gap-8">
+<svg fill="none" height="96" preserveaspectratio="none" viewbox="0 0 475 96" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 70C17.5926 70 17.5926 14 35.1852 14C52.7778 14 52.7778 27 70.3704 27C87.963 27 87.963 60 105.556 60C123.148 60 123.148 22 140.741 22C158.333 22 158.333 65 175.926 65C193.519 65 193.519 40 211.111 40C228.704 40 228.704 30 246.296 30C263.889 30 263.889 78 281.481 78C299.074 78 299.074 96 316.667 96C334.259 96 334.259 1 351.852 1C369.444 1 369.444 52 387.037 52C404.63 52 404.63 83 422.222 83C439.815 83 439.815 17 457.407 17L475 17" stroke="#00B39F" stroke-linecap="round" stroke-width="3"></path>
+<path d="M0 70C17.5926 70 17.5926 14 35.1852 14C52.7778 14 52.7778 27 70.3704 27C87.963 27 87.963 60 105.556 60C123.148 60 123.148 22 140.741 22C158.333 22 158.333 65 175.926 65C193.519 65 193.519 40 211.111 40C228.704 40 228.704 30 246.296 30C263.889 30 263.889 78 281.481 78C299.074 78 299.074 96 316.667 96V96H0V70Z" fill="url(#sparkline-gradient)"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="sparkline-gradient" x1="237.5" x2="237.5" y1="1" y2="96">
+<stop stop-color="#00B39F" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#00B39F" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const subtitles = [
+                "Create a poll in 30 seconds.",
+                "Collect opinions — no signup.",
+                "Realtime analytics you'll love."
+            ];
+            let currentIndex = 0;
+            const typewriterElement = document.querySelector('.typewriter-text');
+
+            function typeWriter() {
+                if (currentIndex >= subtitles.length) {
+                    currentIndex = 0;
+                }
+                typewriterElement.textContent = subtitles[currentIndex];
+                typewriterElement.style.width = '0';
+                typewriterElement.style.animation = 'none';
+                setTimeout(() => {
+                    typewriterElement.style.animation = 'typing 3.5s steps(40, end) infinite, blink-caret .75s step-end infinite';
+                }, 10);
+                currentIndex++;
+            }
+            typeWriter();
+            setInterval(typeWriter, 4700); // 3500ms typing + 1200ms pause
+        });
+    </script>
+</body></html>

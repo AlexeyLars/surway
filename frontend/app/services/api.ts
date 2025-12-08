@@ -1,0 +1,43 @@
+import { config } from '../config';
+
+const API_BASE_URL = config.apiBaseUrl;
+
+export const createPoll = async (title: string, options: string[]) => {
+  const response = await fetch(`${API_BASE_URL}/polls`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, options }),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(JSON.stringify(errorData));
+  }
+  
+  return response.json();
+};
+
+export const getPoll = async (id: string) => {
+  const response = await fetch(`${API_BASE_URL}/polls/${id}/results`);
+  
+  if (!response.ok) {
+    throw new Error('Poll not found');
+  }
+  
+  return response.json();
+};
+
+export const voteOnPoll = async (id: string, optionIndices: number[]) => {
+  const response = await fetch(`${API_BASE_URL}/polls/${id}/vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ option_indices: optionIndices }),
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(JSON.stringify(errorData));
+  }
+  
+  return response.json();
+};
