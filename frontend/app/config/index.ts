@@ -31,10 +31,16 @@ function loadConfig(): FrontendConfig {
   const frontendHost = process.env.NEXT_PUBLIC_FRONTEND_HOST || (typeof window !== 'undefined' ? window.location.hostname : 'localhost');
   const frontendPort = process.env.NEXT_PUBLIC_FRONTEND_PORT || '3000';
   
+  // Don't include port in URL if it's the default port for the protocol
+  const isDefaultPort = (frontendProtocol === 'https' && frontendPort === '443') || 
+                        (frontendProtocol === 'http' && frontendPort === '80');
+  
   // For Vercel deployments, use VERCEL_URL if available
   const frontendBaseUrl = process.env.VERCEL_URL 
     ? `https://${process.env.VERCEL_URL}`
-    : `${frontendProtocol}://${frontendHost}:${frontendPort}`;
+    : isDefaultPort 
+      ? `${frontendProtocol}://${frontendHost}`
+      : `${frontendProtocol}://${frontendHost}:${frontendPort}`;
 
   return {
     apiBaseUrl,
